@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <form>
+        <div id="register-container">
+            <h1>Register</h1>
+            <p>Enter your email and password to create an account.</p>
+            <hr>
+
+            <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="example@gmail.com" name="email" id="email" required>
+
+            <label><b>Password</b></label>
+            <input type="password" placeholder="************" name="psw" id="psw" required>
+
+            <hr>
+
+            <button type="button" id="registerbtn" name="registerbtn" class="submitData">Register</button>
+
+            <p>Already have an account? <a href="#">Sign in</a>.</p>
+        </div>
+        <div id="logged-in-container" style="display:none">
+            <h3>Welcome user!</h3>
+            <p>You have successfully signed in.</p>
+
+            <hr>
+
+            <button type="button" id="logoutbtn" name="logoutbtn" class="submitData">Logout</button>
+        </div>
+    </form>
+</body>
+</html>
+<script type="module">
+    // Import the functions we need from the SDKs we need
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    // Our web app's Firebase configuration
+    const firebaseConfig = {
+        "apiKey": "AIzaSyAH1RmBZKGv7HAtSwvI80teGbhtk69wxFE",
+        "authDomain": "userauthentication-f74e9.firebaseapp.com",
+        "projectId": "userauthentication-f74e9",
+        "storageBucket": "userauthentication-f74e9.appspot.com",
+        "messagingSenderId": "214745295799",
+        "appId": "1:214745295799:web:37871e0a53c601e17b5632",
+        "measurementId": "G-86NCZ2KYY2"
+  };
+  
+    // fetch("firebase-sdk.json");
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    registerbtn.addEventListener('click', (e) => {
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('psw').value;
+
+        //sign up user
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // log in user
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Signed in
+                        document.getElementById("register-container").style.display = "none";
+                        document.getElementById("logged-in-container").style.display = "block";
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        alert(errorMessage);
+                    });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert(errorMessage);
+            });
+    });
+    logoutbtn.addEventListener('click', (e) => {
+        // sign out user
+        signOut(auth).then(() => {
+        // Sign-out successful.
+        document.getElementById("register-container").style.display = "block";
+        document.getElementById("logged-in-container").style.display = "none";
+        alert("Signed out successfully.");
+        }).catch((error) => {
+            // An error happened.
+        });
+    });
+
+</script>
